@@ -56,9 +56,7 @@
                 }
             }
             //If we are multiple, then add the show-tick class by default
-            if(this.multiple) {
-                 this.$newElement.addClass('show-tick'); 
-            }
+            this.$newElement.addClass('show-tick'); 
             this.button.addClass(this.options.style);
             this.checkDisabled();
             this.checkTabIndex();
@@ -154,7 +152,7 @@
                     }
                 } else if ($this.data('divider') == true) {
                     _liA.push('<div class="div-contain"><div class="divider"></div></div>');
-                } else if ($(this).data('hidden') == true) {
+                } else if ($(this).data('hidden') == true || $(this).val() == '') {
                     _liA.push('');
                 } else {
                     _liA.push( _this.createA(text, optionClass ) );
@@ -356,22 +354,17 @@
                 
                 //Dont run if we have been disabled
                 if (_this.$element.not(':disabled') && !$(this).parent().hasClass('disabled')){
+                    var selected = _this.$element.find('option').eq(clickedIndex).prop('selected');
+                    
+                    if(selected) {
+                        _this.$element.find('option').eq(clickedIndex).removeAttr('selected');
+                    } else {
                     //Deselect all others if not multi select box
                     if (!_this.multiple) {
                         _this.$element.find('option').removeAttr('selected');
-                        _this.$element.find('option').eq(clickedIndex).prop('selected', true).attr('selected', 'selected');
-                    } 
-                    //Else toggle the one we have chosen if we are multi select.
-                    else {
-                        var selected = _this.$element.find('option').eq(clickedIndex).prop('selected');
-                        
-                        if(selected) {
-                            _this.$element.find('option').eq(clickedIndex).removeAttr('selected');
-                        } else {
-                            _this.$element.find('option').eq(clickedIndex).prop('selected', true).attr('selected', 'selected');
-                        }
                     }
-                    
+                        _this.$element.find('option').eq(clickedIndex).prop('selected', true).attr('selected', 'selected');
+                    }
                     
                     $select.find('.filter-option').html($this.text());
                     $select.find('button').focus();
